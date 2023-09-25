@@ -1,0 +1,29 @@
+{
+  "name": "auto-sign",
+  "version": "1.0.0",
+  "description": "一些自动化脚本",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "pm2 start pm2.config.js",
+    "stop": "pm2 stop app",
+    "delete": "pm2 delete app",
+    "restart": "pm2 restart app",
+    "save": "pm2 save",
+    "startup": "pm2 startup",
+    "debug": "node ./src/debug.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chalk": "4.1.2",
+    "dayjs": "^1.11.10",
+    "fs-extra": "^11.1.1",
+    "node-notifier": "^10.0.1",
+    "node-schedule": "^2.1.1",
+    "nodemon": "^3.0.1",
+    "puppeteer": "21.1.1"
+  },
+  "dependencies": {
+    "commander": "^11.0.0"
+  }
+}
