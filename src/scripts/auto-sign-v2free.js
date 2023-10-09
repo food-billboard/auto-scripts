@@ -76,28 +76,40 @@ async function sign(selfPage) {
     // 已登录
     if(signBtn) {
       console.log('已登录')
+      // 关闭弹窗
       await page.click('.modal-dialog .text-right button')
       await sleep(2000)
-      await page.click('.ui-card-wrap .usercheck .btn')
-      await sleep(2000)
       let signedBtn 
-      try {
-        signedBtn = await page.$eval(
-          '.ui-card-wrap .usercheck .btn.disabled',
-          (value) => {
-            return value
+      // 重试次数
+      let retry = 5 
+      // 递归多次点击尝试
+      async function click() {
+        try {
+          // 点击签到
+          await page.click('.ui-card-wrap .usercheck .btn')
+          await sleep(2000)
+          signedBtn = await page.$eval(
+            '.ui-card-wrap .usercheck .btn.disabled',
+            (value) => {
+              return value
+            }
+          )
+        }catch(err) {
+  
+        }finally {
+          retry -- 
+          if(signedBtn) {
+            log(SCHEDULE_KEY, '签到成功', true)
+            message('签到成功')
+          }else if(!!retry) {
+            await click()
+          }else {
+            log(SCHEDULE_KEY, '点击签到后状态未发生变化', false)
+            message('点击签到后状态未发生变化')
           }
-        )
-      }catch(err) {
-
+        }
       }
-      if(signedBtn) {
-        log(SCHEDULE_KEY, '签到成功', true)
-        message('签到成功')
-      }else {
-        log(SCHEDULE_KEY, '点击签到后状态未发生变化', false)
-        message('点击签到后状态未发生变化')
-      }
+      await click()
     }
     // 未登录
     else {
